@@ -9,6 +9,10 @@ int main() {
     // Seeding Random
     srand(time(NULL));
 
+    //Initializing variables
+    int projectPull;
+    int skillPull;
+    int studyPull;
     
     // Projects
     Task codexScopeDIY("Codex Scope DIY Manual", "projects");
@@ -66,6 +70,7 @@ int main() {
     {
         
             std::string input = "0";
+            int inputNum;
             while (true) {
 
   
@@ -75,25 +80,43 @@ int main() {
                 }
                 std::cout << "Enter Number: " << std::endl;
                 std::cout << "[1] Roll" << std::endl;
-                std::cout << "[2] Mark Task as Done" << std::endl;
-                std::cout << "[3] Reset Skill Tree" << std::endl;
-                std::cout << "[4] Exit" << std::endl;
+                std::cout << "[2] Change Inputs" << std::endl;
+                std::cout << "[3] Mark Task as Done" << std::endl;
+                std::cout << "[4] Reset Skill Tree" << std::endl;
+                std::cout << "[5] Exit" << std::endl;
                 std::getline(std::cin, input);
 
                 if (input == "1") {
                     std::cout << "\033[2J\033[1;1H";
-                    skillTree->generalPull(0, 2, 1); // Adjust the parameters as needed
+                    skillTree->generalPull(projectPull, skillPull, studyPull); // Adjust the parameters as needed
                     std::cout << "---" << std::endl;
+                
                 } else if (input == "2") {
+                    // Prompt the user for input
+                    std::cout << "Enter Project Num: ";
+                    std::cin >> inputNum;
+                    projectPull = inputNum;
+                    std::cout << "Enter Skill Num: ";
+                    std::cin >> inputNum;
+                    skillPull = inputNum;
+                    std::cout << "Enter Study Num: ";
+                    std::cin >> inputNum;
+                    studyPull = inputNum;
+
+                    std::getline(std::cin, input);
+                    
+                    std::cout << "\033[2J\033[1;1H";
+                    
+                } else if (input == "3") {
 
                     std::cout << "Enter Task Name: " << std::endl;
                     std::getline(std::cin, input);
                     skillTree->markDone(input);
                    // std::cout << "\033[2J\033[1;1H";
-                } else if (input == "3") {
+                } else if (input == "4") {
                     skillTree->resetState("skilltree_state.txt");
                     break;
-                } else if (input == "4") {
+                } else if (input == "5") {
                     skillTree->saveState("skilltree_state.txt");
                     break;
                 } else {
