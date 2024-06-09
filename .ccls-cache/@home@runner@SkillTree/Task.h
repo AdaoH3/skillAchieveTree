@@ -19,6 +19,7 @@ public:
     void addPullNum();
     void setPullNum(int num);
 
+    void markDone(bool on);
     void markDone();
     bool checkDone() const;
     

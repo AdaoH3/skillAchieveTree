@@ -40,8 +40,17 @@ void Task::setPullNum(int num)
     pullNum = num;
 }
 
+void Task::markDone(bool on) {
+    if(on)
+    {
+        isDone = true;
+        return;
+    }
+    isDone = false;
+}
+
 void Task::markDone() {
-    isDone = true; 
+   isDone = true; 
 }
 
 bool Task::checkDone() const {

@@ -4,11 +4,13 @@
 #include <iostream>
 #include <climits>
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 SkillTree::SkillTree(std::vector<Task> tasks)
     : tasks(tasks) {
     // Initialize available vector
-    filterAvailable();
+    //filterAvailable();
     std::cout << "Available tasks initialized: " << available.size() << std::endl;
 }
 
@@ -42,6 +44,15 @@ Task SkillTree::pullType(std::string type) {
     int randomPick = rand() % smallPullTypeList.size();
     Task& selectedTask = *smallPullTypeList[randomPick]; // Use reference
     selectedTask.addPullNum(); // Increment pull number
+    
+    for(Task& taskGet : tasks) // Use reference here
+    {
+        if(selectedTask.getName().compare(taskGet.getName()) == 0)
+        {
+            taskGet.addPullNum();
+        }
+    }
+
     return selectedTask;
 }
 
@@ -51,7 +62,7 @@ Task SkillTree::pullType(std::string type) {
 void SkillTree::filterAvailable()
 {
     int smallestPull = INT_MAX;
-
+ 
     // Find the smallest pull number from the currently available tasks
     if (!available.empty()) {
         for (const Task& task : available) {
@@ -75,7 +86,9 @@ void SkillTree::filterAvailable()
                 available.push_back(newTask);
             }
         }
+        
     }
+
 }
 
 
@@ -180,4 +193,74 @@ std::string SkillTree::generalPull(int projects, int skills, int studies)
 void SkillTree::printAvailable()
 {
     std::cout << formatTasks(available) << std::endl;
+}
+
+void SkillTree::saveState(const std::string& filename) {
+    std::ofstream outFile(filename);
+    if (outFile.is_open()) {
+        for (const auto& task : tasks) {
+            outFile << task.getName() << " | " << task.getPullNum() << " " << task.checkDone() << std::endl;
+            //std::cout << task.getPullNum();
+        }
+        outFile.close();
+    } else {
+        std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    }
+}
+
+void SkillTree::resetState(const std::string& filename) {
+    std::ofstream outFile(filename);
+    if (outFile.is_open()) {
+        outFile << std::endl; // Write an empty line to clear the file
+        outFile.close();
+    } else {
+        std::cerr << "Unable to open file for writing: " << filename << std::endl;
+    }
+}
+
+
+void SkillTree::loadState(const std::string& filename) {
+    std::ifstream inFile(filename);
+
+    std::cout << filename << std::endl;
+
+    if (!inFile.is_open()) {
+        // If the file doesn't exist, create it with default state
+        std::ofstream outFile(filename);
+        if (outFile.is_open()) {
+            for (const auto& task : tasks) {
+                outFile << task.getName() << " | " << task.getPullNum() << " " << task.checkDone() << std::endl;
+            }
+            outFile.close();
+        } else {
+            std::cerr << "Unable to create file: " << filename << std::endl;
+        }
+        return;
+    }
+
+    // File exists, proceed with loading state
+    std::string name;
+    int pullNum;
+    bool done;
+    std::string line;
+    
+    while (std::getline(inFile, line))
+    {
+        size_t pos = line.find('|');
+        name = line.substr(0, pos - 1);
+        //std::cout << name << std::endl;
+        line = line.substr(pos+1);
+        std::stringstream ss(line);
+        ss >> pullNum >> done;
+
+        for (auto& task : tasks) {
+            if (task.getName().compare(name) == 0) {
+                task.setPullNum(pullNum);
+                task.markDone(done);
+                break;
+            }
+        }
+    }
+    //filterAvailable(); // Update available tasks after loading state
+    inFile.close();
 }

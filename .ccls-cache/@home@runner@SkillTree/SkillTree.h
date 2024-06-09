@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "Task.h"
+#include <fstream>
 
 class SkillTree {
 public:
@@ -25,7 +26,10 @@ public:
     //Mark Done
     void markDone(std::string taskName);
 
-   
+    //File Functions
+    void saveState(const std::string& filename);
+    void loadState(const std::string& filename);
+    void resetState(const std::string& filename);
 
 private:
     std::vector<Task> tasks;

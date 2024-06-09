@@ -14,18 +14,18 @@ int main() {
     Task codexScopeDIY("Codex Scope DIY Manual", "projects");
     Task dragonKimWorkshops("Dragon Kim Workshops", "projects");
     Task schoolClubImprovements("School Club Improvements", "projects");
-    Task codexScopeDemo("CodexScope Demo Product", "projects", {codexScopeDIY});
+    Task codexScopeDemo("Codex Scope Demo Product", "projects", {codexScopeDIY});
     Task clockCountdown("Clock Countdown", "projects", {codexScopeDIY, codexScopeDemo});
 
     // Skills
-    Task githubGit("Github and Git", "skills");
+    Task githubGit("Github And Git", "skills");
     Task linuxSkill("Linux", "skills");
     Task unity("Unity Basics", "skills");
-    Task graphics("GraphicsLibrary", "skills");
-    Task electronJs("LearnElectron", "skills");
+    Task graphics("Graphics Library", "skills");
+    Task electronJs("Learn Electron", "skills");
     Task serialTransmit("Serial Transmit", "skills");
 
-    Task serialTAndR("Serial Transmit and Receive", "skills", {serialTransmit, unity});
+    Task serialTAndR("Serial Transmit And Receive", "skills", {serialTransmit, unity});
     Task bashScript("Bash Scripting", "skills", {linuxSkill, githubGit});
     Task raspberryPi("Raspberry Pi", "skills", {linuxSkill});
     Task webPortfolio("Web Portfolio", "skills", {electronJs});
@@ -34,13 +34,13 @@ int main() {
     Task satMath("SAT Math", "studies");
     Task satReading( "SAT Reading", "studies");
     Task amcMath("AMC Math", "studies");
-    Task driverTest("DriverTest", "studies");
+    Task driverTest("Driver Test", "studies");
 
     // Necessarry 
     Task chestWorkout("Chest Workout", "workout");
     Task tricepWorkout("Tricep Workout", "workout");
-    Task sAndBWorkout("Shoulder and Back Workout", "workout");
-    Task lAndFWorkout("Leg and Forearm Workout", "workout");
+    Task sAndBWorkout("Shoulder And Back Workout", "workout");
+    Task lAndFWorkout("Leg And Forearm Workout", "workout");
 
     std::vector<Task> tasks = {
         codexScopeDIY, dragonKimWorkshops, schoolClubImprovements, 
@@ -54,11 +54,21 @@ int main() {
     skillTree = new SkillTree(tasks);
     //skillTree->printAvailable();
     
+    skillTree->loadState("skilltree_state.txt");
+    skillTree->filterAvailable();
+    // Your program logic...
+
+    // Save the state of the skill tree to a file before exiting
+ 
+
+    ///*
     while(true)
     {
+        
             std::string input = "0";
             while (true) {
 
+  
                 if(input.compare("1") != 0)
                 {
 
@@ -66,12 +76,13 @@ int main() {
                 std::cout << "Enter Number: " << std::endl;
                 std::cout << "[1] Roll" << std::endl;
                 std::cout << "[2] Mark Task as Done" << std::endl;
-                std::cout << "[3] Exit" << std::endl;
+                std::cout << "[3] Reset Skill Tree" << std::endl;
+                std::cout << "[4] Exit" << std::endl;
                 std::getline(std::cin, input);
 
                 if (input == "1") {
                     std::cout << "\033[2J\033[1;1H";
-                    skillTree->generalPull(1, 2, 1); // Adjust the parameters as needed
+                    skillTree->generalPull(0, 2, 1); // Adjust the parameters as needed
                     std::cout << "---" << std::endl;
                 } else if (input == "2") {
 
@@ -80,6 +91,10 @@ int main() {
                     skillTree->markDone(input);
                    // std::cout << "\033[2J\033[1;1H";
                 } else if (input == "3") {
+                    skillTree->resetState("skilltree_state.txt");
+                    break;
+                } else if (input == "4") {
+                    skillTree->saveState("skilltree_state.txt");
                     break;
                 } else {
                     std::cout << "Invalid input." << std::endl;
@@ -88,5 +103,5 @@ int main() {
 
             return 0;
     }
-    
+    //*/
 }
